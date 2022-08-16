@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 const User = require("../Models/User");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
@@ -28,10 +29,12 @@ router.post(
           .status(400)
           .json({ errors: "Try a unique email and userName" });
       }
+      const salt = await bcrypt.genSalt(10);
+      const securePass = await bcrypt.hash(req.body.password, salt);
       //Create user
       user = await User.create({
         userName: req.body.userName,
-        password: req.body.password,
+        password: securePass,
         email: req.body.email,
       });
       //Send response
