@@ -44,4 +44,40 @@ router.post(
     }
   }
 );
+
+//Route 3: update note of a user : POST "/api/notes/updatenote" login required
+router.put("/updatenote/:id", userData, async (req, res) => {
+  try {
+    const { title, description, tag } = req.body;
+    const newNote = {};
+    if (title) {
+      newNote.title = title;
+    }
+    if (description) {
+      newNote.description = description;
+    }
+    if (tag) {
+      newNote.tag = tag;
+    }
+    // Find the note and update it
+    let note = await Notes.findById(req.params.id);
+    //If note does not exists
+    if (!note) {
+      return res.status(404).send("Not Found");
+    }
+    if (note.user.toString() !== req.user.id) {
+      return res.status(401).send("Not Allowed");
+    }
+    note = await Notes.findByIdAndUpdate(
+      req.params.id,
+      { $set: newNote },
+      { new: true }
+    );
+    res.json({ note });
+  } catch (error) {
+    //Catch error if try block throws error and log the error
+    console.error(error.message);
+    res.status(500).send("Internal server error");
+  }
+});
 module.exports = router;
