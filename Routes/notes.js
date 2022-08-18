@@ -45,7 +45,7 @@ router.post(
   }
 );
 
-//Route 3: update note of a user : POST "/api/notes/updatenote" login required
+//Route 3: update note of a user : Put "/api/notes/updatenote" login required
 router.put("/updatenote/:id", userData, async (req, res) => {
   try {
     const { title, description, tag } = req.body;
@@ -74,6 +74,29 @@ router.put("/updatenote/:id", userData, async (req, res) => {
       { new: true }
     );
     res.json({ note });
+  } catch (error) {
+    //Catch error if try block throws error and log the error
+    console.error(error.message);
+    res.status(500).send("Internal server error");
+  }
+});
+
+//Route 4: Delete note of a user : POST "/api/notes/updatenote" login required
+router.delete("/deletenote/:id", userData, async (req, res) => {
+  try {
+    const { title, description, tag } = req.body;
+    // Find the note and delete it
+    let note = await Notes.findById(req.params.id);
+    //If note does not exists
+    if (!note) {
+      return res.status(404).send("Not Found");
+    }
+    //Allow deletion only if user owns this note
+    if (note.user.toString() !== req.user.id) {
+      return res.status(401).send("Not Allowed");
+    }
+    note = await Notes.findByIdAndDelete(req.params.id);
+    res.json({ Success: "Note has been deleted", note: note });
   } catch (error) {
     //Catch error if try block throws error and log the error
     console.error(error.message);
