@@ -84,7 +84,6 @@ router.put("/updatenote/:id", userData, async (req, res) => {
 //Route 4: Delete note of a user : POST "/api/notes/updatenote" login required
 router.delete("/deletenote/:id", userData, async (req, res) => {
   try {
-    const { title, description, tag } = req.body;
     // Find the note and delete it
     let note = await Notes.findById(req.params.id);
     //If note does not exists
