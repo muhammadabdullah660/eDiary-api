@@ -1,7 +1,7 @@
 {
-  "name": "inotebook-backend",
+  "name": "eDiary-backend",
   "version": "1.0.0",
-  "description": "\"iNotebook - Your notebook on the cloud\"",
+  "description": "\"eDiary - Your notebook on the cloud\"",
   "main": "index.js",
   "scripts": {
     "server": "nodemon server.js "

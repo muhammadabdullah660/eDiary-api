@@ -16,5 +16,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`iNotebook backend listening on port ${port}`);
+  console.log(`eDiary backend listening on port ${port}`);
 });
