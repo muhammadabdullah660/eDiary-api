@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const mongooseURI = process.env.MONGOURI;
+const mongooseURI = "mongodb://localhost:27017/eDiary?";
 const connectToMongo = () => {
   mongoose.connect(mongooseURI, () => {
     console.log("Connected");

@@ -49,7 +49,8 @@ router.post(
       console.log(token);
       //Send response
       // res.json(user);
-      res.json({ token });
+      success = true;
+      res.json({ success, token });
     } catch (error) {
       //Catch error if try block throws error and log the error
       console.error(error.message);
@@ -71,28 +72,35 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-
+    let success = false;
     const { email, password } = req.body;
     try {
       let user = await User.findOne({ email });
       if (!user) {
+        success = false;
         return res
           .status(400)
-          .json({ errors: "Please try to login with correct credentials" });
+          .json({
+            success,
+            errors: "Please try to login with correct credentials",
+          });
       }
       const passCompare = await bcrypt.compare(password, user.password);
       if (!passCompare) {
-        return res
-          .status(400)
-          .json({ errors: "Please try to login with correct credentials" });
+        success = false;
+        return res.status(400).json({
+          success,
+          errors: "Please try to login with correct credentials",
+        });
       }
       const data = {
         user: {
           id: user.id,
         },
       };
+      success = true;
       const token = jwt.sign(data, JWT_SECRET);
-      res.json({ token });
+      res.json({ success, token });
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Internal server error");
